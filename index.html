@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html ng-app="snippetApp">
+<head>
+  <title>Code Snippet Repository</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="app.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    header nav {
+      display: flex;
+      gap: 15px;
+    }
+    header nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    .container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    .sidebar {
+      width: 250px;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+    }
+    .sidebar input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    .sidebar ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    .sidebar ul li {
+      padding: 10px;
+      cursor: pointer;
+      border-bottom: 1px solid #ddd;
+      transition: background-color 0.3s ease;
+    }
+    .sidebar ul li:hover {
+      background-color: #f1f1f1;
+    }
+    .content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .content h2 {
+      color: #2c3e50;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    input, textarea, button {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .snippet {
+      border: 1px solid #ddd;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Code Snippet Repository</h1>
+    <!--<nav>
+      <a href="#html">HTML</a>
+      <a href="#css">CSS</a>
+      <a href="#javascript">JavaScript</a>
+      <a href="#php">PHP</a>
+      <a href="#terminal">Terminal</a>
+      <a href="#sql">SQL</a>
+      <a href="#wordpress">WordPress</a>
+      <a href="#api">API</a>
+    </nav>-->
+  </header>
+  <div class="container" ng-controller="SnippetController">
+    <div class="sidebar">
+      <input type="text" ng-model="searchQuery" placeholder="Type to find snippets" />
+      <ul>
+        <li ng-repeat="snippet in snippets | filter:searchQuery" ng-click="selectSnippet(snippet)">
+          {{ snippet.title }}
+        </li>
+      </ul>
+    </div>
+    <div class="content">
+      <h2>{{ selectedSnippet.title || "Add New Snippet" }}</h2>
+      <form ng-submit="addSnippet()">
+        <input type="text" ng-model="newSnippet.title" placeholder="Title" required />
+        <input type="text" ng-model="newSnippet.language" placeholder="Language" required />
+        <textarea ng-model="newSnippet.code" placeholder="Code" required rows="5"></textarea>
+        <textarea ng-model="newSnippet.description" placeholder="Description" rows="3"></textarea>
+        <button type="submit">{{ selectedSnippet ? "Update Snippet" : "Add Snippet" }}</button>
+      </form>
+      <div ng-if="selectedSnippet" class="snippet">
+        <h3>{{ selectedSnippet.title }}</h3>
+        <pre>{{ selectedSnippet.code }}</pre>
+        <p><strong>Language:</strong> {{ selectedSnippet.language }}</p>
+        <p>{{ selectedSnippet.description }}</p>
+        <button ng-click="deleteSnippet(selectedSnippet)">Delete</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
